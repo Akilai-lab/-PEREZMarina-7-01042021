@@ -132,34 +132,45 @@ exports.deletePost = async (req, res, next) => {
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
     const userId = decodedToken.userId;
     console.log(req.body);
-    /**{
-     idpost: {
-        id: 27,
-        message: 'changer le contenu',
-        date: '2021-07-23T22:00:00.000Z',
-        media: 'http://localhost:3030/images/Capture_d’écran_2021-06-22_171015.png1627287298641.png',
-        userId: 10
-    }
-    } */
-        console.log('test 2');
         console.log(req.body.idpost.id);
         //27 === id du post
-        console.log('test 2');
         User.findOne({ where: {id: userId} })
+        //on cherche le user qui a comme comme id le userId envoyé en requête
         .then(user=> {
             console.log(user.status)
-            //1
+            //on récupére le status du user
+            // 1 == admin     _      0 == user lambda
             if(user.status === 1 ) {
+                //si status admin
+                    //on supprime le commentaire
                 Comment.destroy({
                     where : {
                         postId : req.body.idpost.id
                     }
                 })
-                //l'id est bien le bon, par contre le commentaire ne se supprime pas et donne null au postId
-                Posts.destroy({
+                //on supprime le post
+                Posts.findOne({
                     where: {
                         id : req.body.idpost.id
                     }
+                })
+                .then(post => {
+                    console.log(post)
+                    console.log(post.media)
+                    const filename = post.media.split("/images/")[1];
+                    console.log(filename);
+                    fs.unlink(`images/${filename}`, function (err) {
+                        if (err) throw err;
+                            console.log('File deleted!');
+                            console.log(filename);
+                        });
+                })
+                .then(()=> {
+                    Posts.destroy({
+                        where: {
+                            id : req.body.idpost.id
+                        }
+                    })
                 })
                 .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
                 .catch(error => res.status(400).json({ error }));
@@ -170,11 +181,32 @@ exports.deletePost = async (req, res, next) => {
                         postId : req.body.idpost.id
                     }
                 })
-                Posts.destroy({
+                Posts.findOne({
                     where: {
                         id : req.body.idpost.id,
                         userId: userId
                     }
+                })
+                .then(post => {
+                    console.log(post)
+                    console.log('post')
+                    console.log(post.media)
+                    const filename = post.media.split("/images/")[1];
+                    console.log(filename);
+                    fs.unlink(`images/${filename}`, function (err) {
+                        if (err) throw err;
+                            console.log('File deleted!');
+                            console.log(filename);
+                        });
+                })
+                .then(()=> {
+                    Posts.destroy({
+                        where: {
+                            id : req.body.idpost.id,
+                            userId: userId
+                        }
+                        
+                    })
                 })
                 .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
                 .catch(error => res.status(400).json({ error }));

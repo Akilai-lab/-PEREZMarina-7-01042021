@@ -415,7 +415,6 @@ export default {
     }
     .activity {
       .circle {
-        width: 25%;
         margin: 0 3%;
       }
     }
@@ -445,7 +444,7 @@ export default {
       .activity {
         justify-content: space-evenly;
         .circle {
-          width: 25%;
+          width: 20%;
           margin: 0;
         }
       }

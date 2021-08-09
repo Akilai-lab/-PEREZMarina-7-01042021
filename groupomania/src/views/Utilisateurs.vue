@@ -6,7 +6,7 @@
             <div class="utilisateur">
                 <div id="user">
                 </div>
-                <div id="test" style="width: auto;align-items: center;display: flex;justify-content: space-evenly;flex-direction: row;margin: 5%;background-color: cadetblue;padding: 2%;">
+                <div id="test">
                 </div>
             </div>
       </div>
@@ -64,8 +64,8 @@ export default {
                 if(i.accountId === null) {
                     //si un user a comme valeur accountId null
                     document.getElementById('user').innerHTML+= `
-                        <div style="margin-right: 20%;">
-                            <div style="height: inherit;width: 150px;background-color: grey;display: flex;justify-content: center;">
+                        <div>
+                            <div style="height: inherit;width: 200px;background-color: grey;display: flex;justify-content: center;">
                                 <p style="color: white;font-size: 65px;">?</p>
                             </div>            
                             <p>${this.nameUser}</p>
@@ -97,7 +97,6 @@ export default {
                         console.log(error);
                     });   
                 });
-                console.log(this.status);
                 if(this.status===1) {
                     var newDiv = document.createElement("div");
                         document.getElementById('test').appendChild(newDiv);
@@ -144,7 +143,7 @@ export default {
                     if(objt.id === i.accountId) {
                         //<router-link @click.native="moreInfo(user)" v-bind:to="'/accountAdmin/'+ user.id" style="color: white;background-color: cadetblue;padding: 10px 20px;border-radius: 50%; width: 13%;">voir plus</router-link>
                         document.getElementById('user').innerHTML+= `
-                            <div style="margin-right: 20%;">
+                            <div>
                                 <img class="picture" src="${this.pictureAccount}" />
                                 <p>${this.nameUser}</p>
                                 <p>${this.lastNameUser}</p>
@@ -209,18 +208,29 @@ export default {
                 display: flex;
                 margin: 5%;
                 flex-direction: row;
+                justify-content: space-evenly;
                 align-items: center;
                 .picture {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     height: 200px;
-                    width: 150px;
+                    width: 200px;
                     background-position: center;
                     background-size: cover;
                     background-repeat: no-repeat;
                     opacity: 70%;
                 }
+            }
+            #test {
+                width: auto;
+                align-items: center;
+                display: flex;
+                justify-content: space-evenly;
+                flex-direction: row;
+                margin: 5%;
+                background-color: cadetblue;
+                padding: 2%;
             }
             p {
                 color: black;
@@ -275,15 +285,32 @@ export default {
 @media all and (min-width: 768px) {
     .allMyUtilisateurs {
         height: 600px;
+        #test {
+            width: auto;
+            align-items: center;
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: row;
+            margin: 5%;
+            background-color: cadetblue;
+            padding: 2%;
+        }
     }
-}                                
-//responsive mobile
-@media all and (max-width: 767px) {
-    .allMyUtilisateurs {
+    /*
+        .allMyUtilisateurs {
         height: inherit;
-        .Utilisateurs {
-            .utilisateur {
-                margin: 0 70px 170px 70px;
+    }*/
+}                                
+
+@media all and (min-width: 300px) and (max-width: 766px) {
+    //.Utilisateurs .utilisateur #user
+    .Utilisateurs {
+        .utilisateur {
+            #user {
+                flex-direction: column;
+            }
+            #test {
+                margin: inherit;
             }
         }
     }

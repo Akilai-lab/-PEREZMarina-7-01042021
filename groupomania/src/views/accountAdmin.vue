@@ -223,6 +223,16 @@ data() {
         }
       }
     }
+    .userActivity {
+      width: initial;
+      .activity {
+        justify-content: space-evenly;
+        .circle {
+          width: 20%;
+          margin: 0;
+        }
+      }
+    }
   }
 }
 @media all and (max-width: 420px) {
@@ -248,7 +258,7 @@ data() {
       .activity {
         justify-content: space-evenly;
         .circle {
-          width: 25%;
+          width: 20%;
           margin: 0;
         }
       }

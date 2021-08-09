@@ -97,6 +97,7 @@ export default {
                         console.log(error);
                     });   
                 });
+                console.log(this.status);
                 if(this.status===1) {
                     var newDiv = document.createElement("div");
                         document.getElementById('test').appendChild(newDiv);

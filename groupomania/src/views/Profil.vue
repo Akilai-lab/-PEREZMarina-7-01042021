@@ -24,11 +24,11 @@
     </div>
     <div class="userActivity">
       <div class="activity">
-        <div class="circle"><span>nb</span></div>
+        <div class="circle"><span>{{nbCom}}</span></div>
         <p>Commentaires</p>
       </div>
       <div class="activity">
-        <div class="circle"><span>nb</span></div>
+        <div class="circle"><span>{{nbPost}}</span></div>
         <p>Posts</p>
       </div>
       <div class="myProfil">
@@ -64,7 +64,11 @@ export default {
       picture : null,
       edited : false,
       description : null,
-      descript : null
+      descript : null,
+      id : null,
+      nbPost : null,
+      commentsShow : null,
+      nbCom : null
     };
   },
   created(){
@@ -83,11 +87,52 @@ export default {
           this.lastName = response.data.lastName;
           this.userName = response.data.userName;
           this.mail = response.data.mail;
+          this.id = response.data.id
         })
         .catch(function (error) {
           this.output = error;
         });
-
+        axios.get("http://localhost:3030/api/post")
+        .then(response => {
+            console.log(response);
+            this.test = response.data;
+            console.log(this.test);
+            for(let object = 0; object < this.test.length; object++) {
+              //on boucle sur les éléments du tableau
+              console.log(this.test[object].userId);
+              if(this.test[object].userId === this.id){
+                //si le userId de chaque object est égal à l'id de l'user
+                console.log(this.test[object]);
+                this.nbPost += 1
+              }
+              else {
+                this.nbPost = 0
+              }
+              //return this.nbPost
+            }
+            console.log(this.nbPost)
+        })
+        axios.get("http://localhost:3030/api/comment")
+        .then(response => {
+            this.commentsShow = response.data;
+            for(let object = 0; object < this.commentsShow.length; object++) {
+              //on boucle sur les éléments du tableau
+              console.log(this.commentsShow[object].userId);
+              if(this.commentsShow[object].userId === this.id){
+                //si le userId de chaque object est égal à l'id de l'user
+                console.log(this.commentsShow[object]);
+                this.nbCom += 1
+              }
+              else {
+                this.nbCom = 0;
+              }
+              //return this.nbPost
+            }
+            console.log(this.nbCom)
+        })
+        .catch(function (error) {
+            this.output = error;
+        });
         axios.get("http://localhost:3030/api/account",{
         headers: {
           'Authorization': auth

@@ -97,29 +97,11 @@ exports.getInfo = async (req, res, next) => {
     res.send(user);
   })
   .catch(error => res.status(500).json({ error }));
-
-  /** Affiche dans postman
-   * {
-      "id": 4,
-      "status": true,
-      "lastName": "Marina",
-      "name": "PEREZ",
-      "userName": "Akilai",
-      "mail": "aki******@********fr",
-      "password": "$2b$10$BQj5hjLSF2KwNz4kJWjcxO33/76dNEnpA4wZ0mICAkqSP5ENy2y6q"
-    }
-   */
-  //la fonction fonctionne avec postman mais pas avec le local
 };
 exports.deleteUser = async (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
   const userId = decodedToken.userId;
-  // Fonction qui permet de supprimer:
-  /*
-    quand un user est connecté :
-      ses posts, ses commentaires et son compte
-  */
   const handleSuccessfulDeletion = () => {
     res.send(200);
   }
@@ -137,12 +119,20 @@ exports.deleteUser = async (req, res, next) => {
         })
         .then(() => 
           Comment.destroy({
-          //l'id est celui de l'userId
+            //l'id est celui de l'userId
             where: {
               userId:userId
             }
           })
         )
+        .then(()=> {
+          Account.destroy({
+            //l'id est celui de l'userId
+            where: {
+              userId:userId
+            }            
+          })
+        })
         .then(() => 
           User.destroy({
             where: {
@@ -158,6 +148,9 @@ exports.deleteUser = async (req, res, next) => {
       Posts.destroy()
         .then(() => 
           Comment.destroy()
+        )
+        .then(()=> 
+          Account.destroy()
         )
         .then(() => 
           User.destroy()
@@ -198,6 +191,13 @@ exports.deleteAnyUser = async (req, res, next) => {
           userId : req.body.iduser
         }
       })
+      .then(() => 
+        Account.destroy({
+          where : {
+            userId : req.body.iduser
+          }
+        })
+      )
       .then(() => 
         Comment.destroy({
           where : {

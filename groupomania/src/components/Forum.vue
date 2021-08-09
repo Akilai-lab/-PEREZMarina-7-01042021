@@ -129,7 +129,9 @@ export default {
             console.log(this.test);
             this.isModifyPost = true;
             this.isModifyComment = true;
-            document.getElementById('hidden').style.display = "block";
+            document.getElementById('hidden').style.display = "flex";
+            document.getElementById('hidden').style.flexDirection = "column";
+            document.getElementById('hidden').style.alignItems = "center";
             for(let i of this.test) {
                 if(item===i.id){           
                     this.newResult = item;
@@ -200,9 +202,7 @@ export default {
             console.log(com);
             this.isModifyComment = true;
             this.isModifyPost = true;
-            document.getElementById('infoHiddenCom').style.display="flex";
-            document.getElementById('infoHiddenCom').style.flexDirection="column";
-            document.getElementById('infoHiddenCom').style.alignItems="center";       
+            document.getElementById('infoHiddenCom').style.display="flex";     
             for(let i of this.commentsShow) {
                 if(com===i.id){   
                     console.log(com)
@@ -328,11 +328,11 @@ export default {
     <div id="blocCentral">
         <div class="blocPost">
             <form enctype='multipart/form-data' style="margin:0; width:100%;">
-                <input type="text" placeholder="What's on your mind?" v-model="message" style="width:inherit;padding:0;box-shadow: 2px 2px 2em rgb(0 0 0 / 16%);border:none;">
+                <input type="text" placeholder="What's on your mind?" v-model="message">
                 <div class="bloc">
                     <div class="iconePicture"></div>
                     <input id="picture" accept="image/*" type="file">
-                    <button type="button" @click="addPost" style="padding: 10px 12px;color: white;text-transform: uppercase;font-weight: bold;background-color: #ff5722;border: none;border-radius: 20px;">Poster</button>
+                    <button type="button" @click="addPost">Poster</button>
                 </div>
             </form>
         </div>
@@ -341,10 +341,10 @@ export default {
                 <div id="blocPost">
                     <div class="ssBloc" v-for="item of this.test" :key="item">
                         <div>
-                            <div id="info" style="display:none;">
+                            <div id="info">
                             </div>
-                            <form id="form" style="display:none;width:83%;width: 35%;margin: 0px 15%;position:fixed;top:70%; z-index:1;">
-                                <textarea v-model="comment" style="width:100%;padding: inherit;" rows="12" cols="12">
+                            <form id="form">
+                                <textarea v-model="comment" rows="12" cols="12">
                                 </textarea> 
                                 <button type="button" @click="publish()">Envoyer</button>
                             </form>
@@ -356,16 +356,16 @@ export default {
                             </div>
                         </div>
                         <div class ="details">
-                            <div class="placement" style="width: 90%;margin: 0 auto;display: flex;justify-content: space-evenly;">
+                            <div class="placement">
                                 <div>
                                     <p>{{item.message}}</p>
                                     <img v-bind:src="item.media" class="img"/>
                                 </div>
-                                <form id="hidden" enctype='multipart/form-data' style="display: none;width: 60%;left: 28%;margin: auto;position: fixed;background-color: #f7ccbb;padding: 5%;flex-direction: column;align-items: center;border: 2.5px solid orange;">
-                                    <input type="text" placeholder="What's on your mind?" v-model="newMessage" style="width: 100%; margin-top:20px;box-shadow: 2px 2px 2em rgb(0 0 0 / 16%);border:none;height: 200px;">
+                                <form id="hidden" enctype='multipart/form-data'>
+                                    <input type="text" placeholder="What's on your mind?" v-model="newMessage">
                                     <div class="iconePicture"></div>
-                                    <input id="newPicture" accept="image/*" type="file" style="position: relative;bottom: 30px;left: 40px;">
-                                    <button type="button" @click="modifyPost(newResult)" style="padding: 10px 12px;color: white;text-transform: uppercase;font-weight: bold;background-color: #ff5722;border: none;border-radius: 20px;">Poster</button>
+                                    <input id="newPicture" accept="image/*" type="file">
+                                    <button type="button" @click="modifyPost(newResult)">Poster</button>
                                 </form>
                                 <div class="choice" v-if="status === 1 || userId === item.userId">
                                     <div class="effectIcones" v-if="isModifyPost === false">
@@ -508,7 +508,7 @@ export default {
                     display: flex;
                     width: 25%;
                     justify-content: space-evenly;
-                    margin: 20px;
+                    margin: 20px auto;
                     height: 30px;
                     .effectIcones {
                         width: 40px;
@@ -545,6 +545,38 @@ export default {
                         }
                     }
                 }
+                #hidden {
+                    display: none;
+                    width: 60%;
+                    left: 28%;
+                    margin: auto;
+                    position: fixed;
+                    background-color: #f7ccbb;
+                    padding: 5%;
+                    flex-direction: column;
+                    align-items: center;
+                    border: 2.5px solid orange;
+                    input {
+                        width: 100%; 
+                        margin-top:20px;
+                        border:none;
+                        height: 200px;
+                    }
+                    #newPicture {
+                        position: relative;
+                        bottom: 30px;
+                        left: 40px;
+                    }
+                    button {
+                        padding: 10px 12px;
+                        color: white;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        background-color: #ff5722;
+                        border: none;
+                        border-radius: 20px;
+                    }
+                }
             }
         }
         .img {
@@ -567,7 +599,7 @@ export default {
                 width: 25%;
                 justify-content: space-evenly;
                 height: 20px;
-                margin: 20px;
+                margin: 20px auto;
                 .effectIcones {
                     width: 40px;
                     height: 40px;
@@ -632,7 +664,31 @@ export default {
                         #picture {
                             width: 35%;
                         }
+                        button {
+                            padding: 10px 12px;
+                            color: white;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                            background-color: #ff5722;
+                            border: none;
+                            border-radius: 20px;
+                        }
                     }
+                }
+            }
+            #info {
+                display:none;
+            }
+            #form {
+                display:none;
+                width:83%;
+                width: 35%;
+                margin: 0px 15%;
+                position:fixed;
+                top:70%; 
+                z-index:1;
+                textarea {
+                    width:100%;padding: inherit;
                 }
             }
             .posts {
@@ -653,6 +709,16 @@ export default {
                                 background-color: white;
                                 border: 1.5px solid #8000008f;
                                 margin: 2%;
+                                #infoHiddenCom {
+                                    display:none;
+                                    width:80%;
+                                    margin: auto;
+                                    height:100%;
+                                    textarea {
+                                        width:100%; 
+                                        margin:0 auto;
+                                    }
+                                }
                             }
                         }
                     }
@@ -702,9 +768,31 @@ export default {
                             width: 100%;
                         }
                         button {
+                            padding: 10px 12px;
+                            color: white;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                            background-color: #ff5722;
+                            border: none;
+                            border-radius: 20px;
                             margin-left: 0;
                         }
                     }
+                }
+            }
+            #info {
+                display:none;
+            }
+            #form {
+                display:none;
+                width:83%;
+                width: 35%;
+                margin: 0px 15%;
+                position:fixed;
+                top:70%; 
+                z-index:1;
+                textarea {
+                    width:100%;padding: inherit;
                 }
             }
             .posts {
@@ -729,7 +817,25 @@ export default {
                                 background-color: white;
                                 border: 1.5px solid #8000008f;
                                 margin: 2%;
+                                #infoHiddenCom {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    button {
+                                        margin: 5%;
+                                    }
+                                }
                             }
+                            #hidden {
+                                flex-direction: column;
+                                align-items: center;
+                            }
+                            #newPicture {
+                                width: 57%;
+                                height: fit-content;
+                                margin: 5%;
+                                position: initial;
+                            } 
                         }
                     }
                 }
@@ -741,15 +847,59 @@ export default {
     .forum {
         width: 100%;
         #blocCentral {
+            .blocPost{
+                form {
+                    input {
+                        width: inherit;
+                        margin: 0 auto;
+                        height: 100%;
+                        padding:0;
+                        border:none;
+                    }
+                    .bloc {
+                        button {
+                            padding: 10px 12px;
+                            color: white;
+                            text-transform: uppercase;
+                            font-weight: bold;
+                            background-color: #ff5722;
+                            border: none;
+                            border-radius: 20px;
+                        }
+                    }
+                }
+            } 
+            #info {
+                display:none;
+            }
+            #form {
+                display:none;
+                width:83%;
+                width: 35%;
+                margin: 0px 15%;
+                position:fixed;
+                top:70%; 
+                z-index:1;
+                textarea {
+                    width:100%;padding: inherit;
+                }
+            }
+            .placement {
+                width: 90%;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-evenly;
+            }
             .img {
                 width: 95%;
             }
             #hidden {
                 left: auto !important;
                 top: 20%;
-            }
-            .choice {
-                width: inherit !important;
+                width: 75%;
+                .iconePicture {
+                    width: 10%;
+                }
             }
             .coms {
                 #infoHiddenCom {

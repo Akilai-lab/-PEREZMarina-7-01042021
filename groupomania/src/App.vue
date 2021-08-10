@@ -248,9 +248,7 @@ header {
         width: 78%;
       }
       #informationsUser {
-        display: flex;
         padding: 0 2%;
-        width: inherit;
       }
     }
   }

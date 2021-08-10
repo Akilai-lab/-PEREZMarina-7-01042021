@@ -8,7 +8,7 @@
         <form id="form" enctype='multipart/form-data' style="display: flex;align-items: center;flex-direction: column;">
           <label style="margin-bottom: 40px;">Ajouter une photo de profil</label>
           <!-- Si l'emplacement comporte une image, on n'affiche pas l'input -->
-          <input id="picture" accept="image/*" type="file" style="position: relative;bottom: 30px;left: 40px;">
+          <input id="picture" accept="image/*" type="file">
           <!-- Condition qui dit que si status est celui d'un admin -->
           <!-- Alors input id picture n'apparait pas -->
           <button @click="newPicture">Ajouter photo</button>
@@ -260,7 +260,8 @@ export default {
         }
         #picture {
           background-color: cadetblue;
-          position: inherit;
+          position: relative;
+          bottom: 30px;
         }
         button {
           color: white;
@@ -437,6 +438,9 @@ export default {
         flex-direction: column;
         width: 100%;
         justify-content: space-around;
+      }
+      #picture {
+        left: 0;
       }
     }
     .userActivity {

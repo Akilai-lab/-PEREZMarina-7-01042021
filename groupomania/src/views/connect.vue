@@ -146,4 +146,15 @@ export default {
     width: 100%;
   }
 }
+@media all and (max-width: 420px) {
+  .mobile {
+    #banniere {
+      width: 88% !important;
+      h1 {
+        width: inherit;
+        font-size: inherit;
+      }
+    }
+  }
+}
 </style>

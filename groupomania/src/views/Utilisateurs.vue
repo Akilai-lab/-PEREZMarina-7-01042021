@@ -1,17 +1,17 @@
 <template>
-  <div class="forum">
-    <div class="allMyUtilisateurs">
-        <h2>Les utilisateurs Groupomania</h2>
-        <div class="Utilisateurs" style="flex-direction: column;">
-            <div class="utilisateur">
-                <div id="user">
-                </div>
-                <div id="test">
+    <div class="forum">
+        <div class="allMyUtilisateurs">
+            <h2>Les utilisateurs Groupomania</h2>
+            <div class="Utilisateurs" style="flex-direction: column;">
+                <div class="utilisateur">
+                    <div id="user">
+                    </div>
+                    <div id="test">
+                    </div>
                 </div>
             </div>
-      </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -35,7 +35,8 @@ export default {
             account: null
         };
     },
-    mounted(){
+    created(){
+        /** Route pour récupérer les utilisateurs **/
         axios.get("http://localhost:3030/api/user/all")
         .then(response => {
             console.log(response);
@@ -46,6 +47,40 @@ export default {
         .catch((error) => {
             console.log(error);
         });
+        /** On récupère les account s'ils existent **/
+        const monObjet = JSON.parse(localStorage.getItem('token'));
+        let auth = 'bearer' + " " + monObjet.token;
+        axios.get("http://localhost:3030/api/account/",{
+            headers: {
+                'Authorization': auth
+            }
+        })
+        .then(response => {
+            console.log(response);
+            console.log(response.data);
+            this.picture = response.data.media;
+            this.id = response.data.userId;
+            console.log(this.picture);
+            console.log(this.userId);
+            console.log(this.id);
+        })
+        .catch(function (error) {
+            this.output = error;
+        });
+        /** On récupère le status de l'utilisateur connecté **/
+        axios.get("http://localhost:3030/api/user",{
+        headers: {
+          'Authorization': auth
+        }
+        })
+        .then(response => {
+            this.status = response.data.status;
+            console.log(this.status);
+        })
+        .catch(function (error) {
+          this.output = error;
+        });
+        /** On récupère tous les account **/
         axios.get("http://localhost:3030/api/account/all")
         .then(response => {
             console.log(response)
@@ -73,16 +108,17 @@ export default {
                         </div>
                     `
                 }
-                var btn = document.createElement("BUTTON");   
+                var btn = document.createElement("BUTTON");
+                btn.className = 'detailAccount';   
                 btn.innerHTML += `${this.lastNameUser}`;
-                btn.style.color='white';   
+                /*btn.style.color='white';   
                 btn.style.textAlign= 'center';
                 btn.style.backgroundColor='cadetblue';
                 btn.style.padding='10px 20px';
                 btn.style.borderRadius='50%';
                 btn.style.width='15%';
                 btn.style.border='none';
-                btn.style.textTransform = 'capitalize';     
+                btn.style.textTransform = 'capitalize'; */    
                 document.getElementById('test').appendChild(btn);
                 btn.addEventListener("click", function() {
                     window.location.pathname='/accountAdmin/'+ i.id;
@@ -97,11 +133,14 @@ export default {
                         console.log(error);
                     });   
                 });
+                console.log(this.status)
                 if(this.status===1) {
                     var newDiv = document.createElement("div");
                         document.getElementById('test').appendChild(newDiv);
                         newDiv.className = 'supAccount';
+                        console.log('pre-delete');
                         newDiv.addEventListener("click", function() {
+                            console.log('delete');
                             let iduser = i.id;
                             const monObjet = JSON.parse(localStorage.getItem('token'));
                             let auth = 'bearer' + " " + monObjet.token;
@@ -127,12 +166,10 @@ export default {
                 }
             }
             for (let objt of response.data) {
-                //on boucle sur les composants des lignes dans la table account
                 this.pictureAccount = objt.media;
                 this.idAccount = objt.id;
                 console.log(objt)
                 for (let i of this.user) {
-                    //on boucle sur les données des users
                     console.log(i);
                     this.nameUser = i.name;
                     this.lastNameUser = i.lastName;
@@ -141,7 +178,6 @@ export default {
                     console.log(i.lastName)
                     console.log(i.id);
                     if(objt.id === i.accountId) {
-                        //<router-link @click.native="moreInfo(user)" v-bind:to="'/accountAdmin/'+ user.id" style="color: white;background-color: cadetblue;padding: 10px 20px;border-radius: 50%; width: 13%;">voir plus</router-link>
                         document.getElementById('user').innerHTML+= `
                             <div>
                                 <img class="picture" src="${this.pictureAccount}" />
@@ -155,39 +191,6 @@ export default {
         })
         .catch((error) => {
             console.log(error);
-        });
-    },
-    created() {
-        const monObjet = JSON.parse(localStorage.getItem('token'));
-        let auth = 'bearer' + " " + monObjet.token;
-        axios.get("http://localhost:3030/api/account/",{
-            headers: {
-                'Authorization': auth
-            }
-        })
-        .then(response => {
-            console.log(response);
-            console.log(response.data);
-            this.picture = response.data.media;
-            this.id = response.data.userId;
-            console.log(this.picture);
-            console.log(this.userId);
-            console.log(this.id);
-        })
-        .catch(function (error) {
-            this.output = error;
-        });
-        axios.get("http://localhost:3030/api/user",{
-        headers: {
-          'Authorization': auth
-        }
-        })
-        .then(response => {
-            this.status = response.data.status;
-            console.log(this.status);
-        })
-        .catch(function (error) {
-          this.output = error;
         });
     }
 }
@@ -224,13 +227,19 @@ export default {
             }
             #test {
                 width: auto;
-                align-items: center;
-                display: flex;
-                justify-content: space-evenly;
-                flex-direction: row;
-                margin: 5%;
-                background-color: cadetblue;
+                margin: 3px;
                 padding: 2%;
+                display: flex;
+                .detailAccount {
+                    color: white;
+                    text-align: center;
+                    background-color: cadetblue;
+                    padding: 10px 20px;
+                    border-radius: 50%;
+                    width: 15%;
+                    border: none;
+                    text-transform: capitalize;                    
+                }
             }
             p {
                 color: black;
@@ -279,40 +288,65 @@ export default {
             background-size : cover;
             display: flex;
             filter: invert(1);
-            margin-right: 20%;
+            margin: 2% auto;
         }
-    }
+}
 @media all and (min-width: 768px) {
     .allMyUtilisateurs {
         height: 600px;
         #test {
             width: auto;
-            align-items: center;
-            display: flex;
-            justify-content: space-evenly;
-            flex-direction: row;
-            margin: 5%;
+            margin: 3%;
             background-color: cadetblue;
             padding: 2%;
+            .supAccount {
+                background-repeat : no-repeat;
+                background-size : cover;
+            }
         }
     }
-    /*
-        .allMyUtilisateurs {
-        height: inherit;
-    }*/
 }                                
 
-@media all and (min-width: 300px) and (max-width: 766px) {
-    //.Utilisateurs .utilisateur #user
-    .Utilisateurs {
+@media all and (min-width: 650px) and (max-width: 766px) {
+    .allMyUtilisateurs {
+        height: auto;
+        .Utilisateurs {
+            .utilisateur {
+                #user {
+                    flex-direction: column;
+                }
+                #test {
+                    width: auto;
+                    margin: 5%;
+                    background-color: cadetblue;
+                    padding: 2%;
+                }
+            }
+        }
+    }
+}
+
+@media all and (max-width: 649px) {
+    .allMyUtilisateurs {
+        height: auto;
+        .Utilisateurs {
+            flex-wrap: initial;
         .utilisateur {
             #user {
+                margin: auto;
                 flex-direction: column;
             }
             #test {
-                margin: inherit;
+                display: block;
+                .detailAccount {
+                    width: auto;                  
+                }
+                .supAccount {
+                    filter: contrast(0.3);
+                }
             }
         }
+    }
     }
 }
 </style>

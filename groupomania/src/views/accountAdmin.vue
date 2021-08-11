@@ -15,16 +15,12 @@ data() {
       mail : null,
       picture : null,
       accountId : null,
-      actualUserId : null
+      actualUserId : null,
+      nbPost : null,
+      nbCom : null
     };
   },
   created(){
-    /**
-     * Créer une fonction qui va récupérer tous les commentaires 
-     * qui ont le même userId que celui de this.accountId
-     * Créer une fonction qui va récupérer tous les posts 
-     * qui ont le même userId que celui de this.accountId
-     */
     console.log(this.$route.params.id)
     axios.get(`http://localhost:3030/api/account/${this.$route.params.id}`)
     .then(response => {
@@ -67,6 +63,53 @@ data() {
     .catch(function (error) {
       this.output = error;
     });
+
+    axios.get("http://localhost:3030/api/post")
+    .then(response => {
+      console.log(response);
+      this.test = response.data;
+      console.log(this.test);
+      for(let object = 0; object < this.test.length; object++) {
+        //on boucle sur les éléments du tableau
+        console.log(this.test[object].userId);
+        console.log(this.accountId);
+        if(this.test[object].userId === this.actualUserId){
+          //si le userId de chaque object est égal à l'id de l'user
+          console.log('hey');
+          this.nbPost += 1
+          //renvoi 0 alors qu'il y a un post
+          console.log(this.nbPost)
+        }
+        else {
+          this.nbPost = 0
+        }
+              //return this.nbPost
+      }
+      console.log(this.nbPost)
+    })
+    axios.get("http://localhost:3030/api/comment")
+    .then(response => {
+      this.commentsShow = response.data;
+      for(let object = 0; object < this.commentsShow.length; object++) {
+        //on boucle sur les éléments du tableau
+        console.log(this.commentsShow[object].userId);
+        if(this.commentsShow[object].userId === this.actualUserId){
+          //si le userId de chaque object est égal à l'id de l'user
+          console.log(this.commentsShow[object]);
+          console.log('hey');
+          this.nbCom += 1
+          //renvoi 0 alors qu'il y a un commentaire
+        }
+        else {
+          this.nbCom = 0;
+        }
+        //return this.nbPost
+      }
+      console.log(this.nbCom)
+    })
+    .catch(function (error) {
+      this.output = error;
+    });
   }
 }
 </script>
@@ -87,11 +130,11 @@ data() {
     </div>
     <div class="userActivity">
       <div class="activity">
-        <div class="circle"><span>nb</span></div>
+        <div class="circle"><span>{{nbCom}}</span></div>
         <p>Commentaires</p>
       </div>
       <div class="activity">
-        <div class="circle"><span>nb</span></div>
+        <div class="circle"><span>{{nbPost}}</span></div>
         <p>Posts</p>
       </div>
       <div class="myProfil">
@@ -246,10 +289,12 @@ data() {
       display: flex;
       flex-direction: column;
       .picture {
+        height: 222px;
+        width: 180px;
         img {
           border-radius: 50%;
-          height: 200px;
-          width: 150px;
+          height: 222px;
+          width: 180px;
         }
       }
     }

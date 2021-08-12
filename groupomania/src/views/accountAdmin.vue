@@ -20,7 +20,8 @@ data() {
       nbCom : null
     };
   },
-  created(){
+  //pb apparition nb de posts et commentaires au chgt
+  mounted(){
     console.log(this.$route.params.id)
     axios.get(`http://localhost:3030/api/account/${this.$route.params.id}`)
     .then(response => {
@@ -35,8 +36,7 @@ data() {
     .catch(function (error) {
       this.output = error;
     });
-
-    const monObjet = JSON.parse(localStorage.getItem('token'));
+        const monObjet = JSON.parse(localStorage.getItem('token'));
     let auth = 'bearer' + " " + monObjet.token;
     axios.get("http://localhost:3030/api/account/all",{
       headers: {
@@ -63,7 +63,6 @@ data() {
     .catch(function (error) {
       this.output = error;
     });
-
     axios.get("http://localhost:3030/api/post")
     .then(response => {
       console.log(response);

@@ -547,25 +547,23 @@ export default {
                 }
                 #hidden {
                     display: none;
-                    width: 60%;
-                    left: 28%;
-                    margin: auto;
+                    width: 50%;
+                    top: 20%;
+                    margin: 5%;
                     position: fixed;
                     background-color: #f7ccbb;
-                    padding: 5%;
+                    padding: 2%;
                     flex-direction: column;
                     align-items: center;
                     border: 2.5px solid orange;
                     input {
                         width: 100%; 
-                        margin-top:20px;
                         border:none;
                         height: 200px;
                     }
                     #newPicture {
                         position: relative;
-                        bottom: 30px;
-                        left: 40px;
+                        height: 100px;
                     }
                     button {
                         padding: 10px 12px;
@@ -895,8 +893,9 @@ export default {
             }
             #hidden {
                 left: auto !important;
+                width: 72%;
                 top: 20%;
-                width: 75%;
+                width: 75% !important;
                 .iconePicture {
                     width: 10%;
                 }

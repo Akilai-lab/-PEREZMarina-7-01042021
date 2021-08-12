@@ -71,7 +71,7 @@ export default {
       nbCom : null
     };
   },
-  created(){
+  mounted(){
         console.log('user')
         //si userAuth est true alors on affiche les informations relatives à l'user connecté
         const monObjet = JSON.parse(localStorage.getItem('token'));

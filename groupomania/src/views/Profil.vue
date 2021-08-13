@@ -71,7 +71,7 @@ export default {
       nbCom : null
     };
   },
-  mounted(){
+  created(){
         console.log('user')
         //si userAuth est true alors on affiche les informations relatives à l'user connecté
         const monObjet = JSON.parse(localStorage.getItem('token'));
@@ -89,49 +89,51 @@ export default {
           this.mail = response.data.mail;
           this.id = response.data.id
         })
+        .then(()=>{
+          axios.get("http://localhost:3030/api/post")
+          .then(response => {
+              console.log(response);
+              this.test = response.data;
+              console.log(this.test);
+              for(let object = 0; object < this.test.length; object++) {
+                //on boucle sur les éléments du tableau
+                console.log(this.test[object].userId);
+                if(this.test[object].userId === this.id){
+                  //si le userId de chaque object est égal à l'id de l'user
+                  console.log(this.test[object]);
+                  this.nbPost += 1
+                }
+                else {
+                  this.nbPost = 0
+                }
+                //return this.nbPost
+              }
+              console.log(this.nbPost)
+          })
+          axios.get("http://localhost:3030/api/comment")
+          .then(response => {
+              this.commentsShow = response.data;
+              for(let object = 0; object < this.commentsShow.length; object++) {
+                //on boucle sur les éléments du tableau
+                console.log(this.commentsShow[object].userId);
+                if(this.commentsShow[object].userId === this.id){
+                  //si le userId de chaque object est égal à l'id de l'user
+                  console.log(this.commentsShow[object]);
+                  this.nbCom += 1
+                }
+                else {
+                  this.nbCom = 0;
+                }
+                //return this.nbPost
+              }
+              console.log(this.nbCom)
+          })
+          .catch(function (error) {
+              this.output = error;
+          });
+        })
         .catch(function (error) {
           this.output = error;
-        });
-        axios.get("http://localhost:3030/api/post")
-        .then(response => {
-            console.log(response);
-            this.test = response.data;
-            console.log(this.test);
-            for(let object = 0; object < this.test.length; object++) {
-              //on boucle sur les éléments du tableau
-              console.log(this.test[object].userId);
-              if(this.test[object].userId === this.id){
-                //si le userId de chaque object est égal à l'id de l'user
-                console.log(this.test[object]);
-                this.nbPost += 1
-              }
-              else {
-                this.nbPost = 0
-              }
-              //return this.nbPost
-            }
-            console.log(this.nbPost)
-        })
-        axios.get("http://localhost:3030/api/comment")
-        .then(response => {
-            this.commentsShow = response.data;
-            for(let object = 0; object < this.commentsShow.length; object++) {
-              //on boucle sur les éléments du tableau
-              console.log(this.commentsShow[object].userId);
-              if(this.commentsShow[object].userId === this.id){
-                //si le userId de chaque object est égal à l'id de l'user
-                console.log(this.commentsShow[object]);
-                this.nbCom += 1
-              }
-              else {
-                this.nbCom = 0;
-              }
-              //return this.nbPost
-            }
-            console.log(this.nbCom)
-        })
-        .catch(function (error) {
-            this.output = error;
         });
         axios.get("http://localhost:3030/api/account",{
         headers: {

@@ -299,6 +299,7 @@ export default {
             margin: 3%;
             background-color: cadetblue;
             padding: 2%;
+            justify-content: space-around;
             .supAccount {
                 background-repeat : no-repeat;
                 background-size : cover;
@@ -320,6 +321,7 @@ export default {
                     margin: 5%;
                     background-color: cadetblue;
                     padding: 2%;
+                    justify-content: space-around;
                 }
             }
         }

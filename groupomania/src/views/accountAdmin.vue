@@ -20,9 +20,7 @@ data() {
       nbCom : null
     };
   },
-  //pb apparition nb de posts et commentaires au chgt
-  mounted(){
-    console.log(this.$route.params.id)
+  created(){
     axios.get(`http://localhost:3030/api/account/${this.$route.params.id}`)
     .then(response => {
       console.log(response.data);
@@ -36,7 +34,7 @@ data() {
     .catch(function (error) {
       this.output = error;
     });
-        const monObjet = JSON.parse(localStorage.getItem('token'));
+    const monObjet = JSON.parse(localStorage.getItem('token'));
     let auth = 'bearer' + " " + monObjet.token;
     axios.get("http://localhost:3030/api/account/all",{
       headers: {
@@ -60,51 +58,50 @@ data() {
         }
       }
     })
-    .catch(function (error) {
-      this.output = error;
-    });
-    axios.get("http://localhost:3030/api/post")
-    .then(response => {
-      console.log(response);
-      this.test = response.data;
-      console.log(this.test);
-      for(let object = 0; object < this.test.length; object++) {
-        //on boucle sur les éléments du tableau
-        console.log(this.test[object].userId);
-        console.log(this.accountId);
-        if(this.test[object].userId === this.actualUserId){
-          //si le userId de chaque object est égal à l'id de l'user
-          console.log('hey');
-          this.nbPost += 1
-          //renvoi 0 alors qu'il y a un post
-          console.log(this.nbPost)
+    .then(()=> {
+      axios.get("http://localhost:3030/api/post")
+      .then(response => {
+        console.log(response);
+        this.test = response.data;
+        console.log(this.test);
+        for(let object = 0; object < this.test.length; object++) {
+          //on boucle sur les éléments du tableau
+          console.log(this.test[object].userId);
+          console.log(this.accountId);
+          if(this.test[object].userId === this.actualUserId){
+            //si le userId de chaque object est égal à l'id de l'user
+            console.log('hey');
+            this.nbPost += 1
+            console.log(this.nbPost)
+          }
+          else {
+            this.nbPost = 0
+          }
+                //return this.nbPost
         }
-        else {
-          this.nbPost = 0
+        console.log(this.nbPost)
+      })
+      axios.get("http://localhost:3030/api/comment")
+      .then(response => {
+        this.commentsShow = response.data;
+        for(let object = 0; object < this.commentsShow.length; object++) {
+          //on boucle sur les éléments du tableau
+          console.log(this.commentsShow[object].userId);
+          if(this.commentsShow[object].userId === this.actualUserId){
+            //si le userId de chaque object est égal à l'id de l'user
+            console.log(this.commentsShow[object]);
+            console.log('hey');
+            this.nbCom += 1
+          }
+          else {
+            this.nbCom = 0;
+          }
         }
-              //return this.nbPost
-      }
-      console.log(this.nbPost)
-    })
-    axios.get("http://localhost:3030/api/comment")
-    .then(response => {
-      this.commentsShow = response.data;
-      for(let object = 0; object < this.commentsShow.length; object++) {
-        //on boucle sur les éléments du tableau
-        console.log(this.commentsShow[object].userId);
-        if(this.commentsShow[object].userId === this.actualUserId){
-          //si le userId de chaque object est égal à l'id de l'user
-          console.log(this.commentsShow[object]);
-          console.log('hey');
-          this.nbCom += 1
-          //renvoi 0 alors qu'il y a un commentaire
-        }
-        else {
-          this.nbCom = 0;
-        }
-        //return this.nbPost
-      }
-      console.log(this.nbCom)
+        console.log(this.nbCom)
+      })
+      .catch(function (error) {
+        this.output = error;
+      });
     })
     .catch(function (error) {
       this.output = error;

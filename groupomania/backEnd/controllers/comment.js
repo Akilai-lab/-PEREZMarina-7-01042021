@@ -71,7 +71,6 @@ exports.modifyComment = async (req , res, next) =>{
         comment.update({
             message: req.body.message
         })
-        console.log('re hey');
         console.log(comment);
         res.send(comment);
     })
@@ -91,7 +90,6 @@ exports.modifyComment = async (req , res, next) =>{
                 comment.update({
                     message: req.body.message
                 })
-                console.log('re hey');
                 console.log(comment);
                 res.send(comment);
             })

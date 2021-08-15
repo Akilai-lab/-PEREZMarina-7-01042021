@@ -175,12 +175,12 @@ data() {
     }
     .activity {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-evenly;
       align-items: center;
-      margin: 20px 20%;
+      margin: 20px auto;
       .circle {
         display: inline-block;
-        width: 10%;
+        width: 50px;
         height: 50px;
         margin: 0 40px 0 20%;
         border-radius: 50%;
@@ -246,6 +246,9 @@ data() {
         }
       }
     }
+    .userActivity {
+      width: 50%;
+    }
   }
 }                                
 //responsive mobile
@@ -271,10 +274,9 @@ data() {
     .userActivity {
       width: initial;
       .activity {
-        justify-content: space-evenly;
+        justify-content: center;
         .circle {
-          width: 20%;
-          margin: 0;
+          margin: 10px 15px;
         }
       }
     }
@@ -305,7 +307,6 @@ data() {
       .activity {
         justify-content: space-evenly;
         .circle {
-          width: 20%;
           margin: 0;
         }
       }

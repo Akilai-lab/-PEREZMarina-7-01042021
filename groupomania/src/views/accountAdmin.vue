@@ -1,116 +1,5 @@
-<script>
-// @ is an alias to /src
-//import AccountAdmin from '@/components/AccountAdmin.vue'
-import axios from "axios"; 
-export default {
-  name: 'MyAccountAdmin',
-data() {
-    return {
-      test : null,
-      commentsShow : null,
-      postShow : null,
-      lastName : null,
-      name : null,
-      userName : null,
-      mail : null,
-      picture : null,
-      accountId : null,
-      actualUserId : null,
-      nbPost : null,
-      nbCom : null
-    };
-  },
-  created(){
-    axios.get(`http://localhost:3030/api/account/${this.$route.params.id}`)
-    .then(response => {
-      console.log(response.data);
-      this.lastName = response.data.lastName,
-      this.name = response.data.name,
-      this.userName = response.data.userName,
-      this.mail = response.data.mail
-      this.accountId = this.$route.params.id;
-      console.log(this.accountId)
-    })
-    .catch(function (error) {
-      this.output = error;
-    });
-    const monObjet = JSON.parse(localStorage.getItem('token'));
-    let auth = 'bearer' + " " + monObjet.token;
-    axios.get("http://localhost:3030/api/account/all",{
-      headers: {
-        'Authorization': auth
-      }
-    })
-    .then(response => {
-      //response data est égal à un compte dans account mais pas celui de redirection
-      console.log(response.data);// est l'userId présent dans la table account
-      /**le but est de vérifier s'il y a dans la bdd un account qui a comme userId le id de l'user */
-      for(let i of response.data) {
-        console.log(this.accountId);
-        console.log(i.userId);
-        console.log(i.media);
-        if(this.accountId == i.userId) {
-          console.log(i.media)
-          this.actualUserId = i.userId;
-          this.picture = i.media;
-          console.log(i.userId);
-          console.log(this.picture);
-        }
-      }
-    })
-    .then(()=> {
-      axios.get("http://localhost:3030/api/post")
-      .then(response => {
-        console.log(response);
-        this.test = response.data;
-        console.log(this.test);
-        for(let object = 0; object < this.test.length; object++) {
-          //on boucle sur les éléments du tableau
-          console.log(this.test[object].userId);
-          console.log(this.accountId);
-          if(this.test[object].userId === this.actualUserId){
-            //si le userId de chaque object est égal à l'id de l'user
-            console.log('hey');
-            this.nbPost += 1
-            console.log(this.nbPost)
-          }
-          else {
-            this.nbPost = 0
-          }
-                //return this.nbPost
-        }
-        console.log(this.nbPost)
-      })
-      axios.get("http://localhost:3030/api/comment")
-      .then(response => {
-        this.commentsShow = response.data;
-        for(let object = 0; object < this.commentsShow.length; object++) {
-          //on boucle sur les éléments du tableau
-          console.log(this.commentsShow[object].userId);
-          if(this.commentsShow[object].userId === this.actualUserId){
-            //si le userId de chaque object est égal à l'id de l'user
-            console.log(this.commentsShow[object]);
-            console.log('hey');
-            this.nbCom += 1
-          }
-          else {
-            this.nbCom = 0;
-          }
-        }
-        console.log(this.nbCom)
-      })
-      .catch(function (error) {
-        this.output = error;
-      });
-    })
-    .catch(function (error) {
-      this.output = error;
-    });
-  }
-}
-</script>
 <template>
-<div class="allSectionsUsers">
+  <div class="allSectionsUsers">
     <div class="user">
       <div class="picture" v-if="accountId==actualUserId">
         <img :src = "picture" /> 
@@ -136,12 +25,129 @@ data() {
       <div class="myProfil">
         <h1>Qui suis-je?</h1>
         <p>
-          Integer neque nulla, pellentesque vestibulum diam nec, bibendum pharetra diam. Morbi quis justo sed turpis convallis congue. Integer sed justo nunc. Etiam volutpat accumsan massa vitae dapibus. Proin commodo rhoncus lorem ac commodo.
+          {{descript}}
         </p>
       </div>
     </div>
   </div>
 </template>
+<script>
+// @ is an alias to /src
+//import AccountAdmin from '@/components/AccountAdmin.vue'
+import axios from "axios"; 
+export default {
+  name: 'MyAccountAdmin',
+data() {
+    return {
+      test : null,
+      commentsShow : null,
+      postShow : null,
+      lastName : null,
+      name : null,
+      userName : null,
+      mail : null,
+      picture : null,
+      accountId : null,
+      actualUserId : null,
+      nbPost : null,
+      nbCom : null,
+      descript : null
+    };
+  },
+  created(){
+    //On récupère les données de l'user qui a été ciblé
+    axios.get(`http://localhost:3030/api/account/${this.$route.params.id}`)
+    .then(response => {
+      console.log(response.data);
+      this.lastName = response.data.lastName,
+      this.name = response.data.name,
+      this.userName = response.data.userName,
+      this.mail = response.data.mail
+      this.accountId = this.$route.params.id;
+      console.log(this.accountId)
+    })
+    .catch(function (error) {
+      this.output = error;
+    });
+    /*const monObjet = JSON.parse(localStorage.getItem('token'));
+    let auth = 'bearer' + " " + monObjet.token;*/
+
+    //On récupére les données des accounts
+    axios.get("http://localhost:3030/api/account/all"/*,{
+      headers: {
+        'Authorization': auth
+      }
+    }*/)
+    .then(response => {
+      //response data est égal à un compte dans account mais pas celui de redirection
+      console.log(response.data);// est l'userId présent dans la table account
+      /**le but est de vérifier s'il y a dans la bdd un account qui a comme userId le id de l'user */
+      for(let i of response.data) {
+        console.log(this.accountId);
+        console.log(i.userId);
+        console.log(i.media);
+        if(this.accountId == i.userId) {
+          //Si un accountId (this.$route.params.id) est identique à l'userId de l'account
+          console.log(i.media)
+          this.descript = i.textDescription;
+          this.actualUserId = i.userId;
+          this.picture = i.media;
+          console.log(i.userId);
+          console.log(this.picture);
+        }
+      }
+    })
+    .then(()=> {
+      //On récupère tous les posts
+      axios.get("http://localhost:3030/api/post")
+      .then(response => {
+        console.log(response);
+        this.test = response.data;
+        console.log(this.test);
+        for(let object = 0; object < this.test.length; object++) {
+          console.log(this.test[object].userId);
+          console.log(this.accountId);
+          //Si l'userId d'un post est identique à l'userId 
+          if(this.test[object].userId === this.actualUserId){
+            //on incrémente +1 à la variable qui correspond au nb de posts
+            this.nbPost += 1
+            console.log(this.nbPost)
+          }
+          else {
+            this.nbPost = 0
+          }
+        }
+        console.log(this.nbPost)
+      })
+      //On récupère tous les commentaires
+      axios.get("http://localhost:3030/api/comment")
+      .then(response => {
+        this.commentsShow = response.data;
+        for(let object = 0; object < this.commentsShow.length; object++) {
+          console.log(this.commentsShow[object].userId);
+          //Si l'userId d'un post est identique à l'userId
+          if(this.commentsShow[object].userId === this.actualUserId){
+            console.log(this.commentsShow[object]);
+            //on incrémente +1 à la variable qui correspond au nb de commentaires
+            this.nbCom += 1
+          }
+          else {
+            this.nbCom = 0;
+          }
+        }
+        console.log(this.nbCom)
+      })
+      .catch(function (error) {
+        this.output = error;
+      });
+    })
+    .catch(function (error) {
+      this.output = error;
+    });
+  }
+}
+</script>
+
 <style lang="scss">
   .allSectionsUsers {
     width: 75%;

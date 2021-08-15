@@ -69,9 +69,9 @@ export default {
         });
         /** On récupère le status de l'utilisateur connecté **/
         axios.get("http://localhost:3030/api/user",{
-        headers: {
-          'Authorization': auth
-        }
+            headers: {
+            'Authorization': auth
+            }
         })
         .then(response => {
             this.status = response.data.status;
@@ -80,15 +80,15 @@ export default {
         .catch(function (error) {
           this.output = error;
         });
-        /** On récupère tous les account **/
+        //On récupère tous les accounts
         axios.get("http://localhost:3030/api/account/all")
         .then(response => {
             console.log(response)
-            //affiche les données de l'account 
             this.account = response.data;
             console.log(this.account);
             console.log(response.data);
             for (let i of this.user) {
+                //On boucle sur les user
                 console.log(i);
                 this.nameUser = i.name;
                 this.lastNameUser = i.lastName;
@@ -97,7 +97,7 @@ export default {
                 console.log(i.lastName)
                 console.log(i.id);
                 if(i.accountId === null) {
-                    //si un user a comme valeur accountId null
+                    //Si l'user n'a pas d'account
                     document.getElementById('user').innerHTML+= `
                         <div>
                             <div style="height: inherit;width: 200px;background-color: grey;display: flex;justify-content: center;">
@@ -108,17 +108,10 @@ export default {
                         </div>
                     `
                 }
+                //On crée un bouton pour rediriger vers la page accountAdmin/ avec l'id de l'user ciblé
                 var btn = document.createElement("BUTTON");
                 btn.className = 'detailAccount';   
-                btn.innerHTML += `${this.lastNameUser}`;
-                /*btn.style.color='white';   
-                btn.style.textAlign= 'center';
-                btn.style.backgroundColor='cadetblue';
-                btn.style.padding='10px 20px';
-                btn.style.borderRadius='50%';
-                btn.style.width='15%';
-                btn.style.border='none';
-                btn.style.textTransform = 'capitalize'; */    
+                btn.innerHTML += `${this.lastNameUser}`; 
                 document.getElementById('test').appendChild(btn);
                 btn.addEventListener("click", function() {
                     window.location.pathname='/accountAdmin/'+ i.id;
@@ -135,6 +128,7 @@ export default {
                 });
                 console.log(this.status)
                 if(this.status===1) {
+                    //S'il s'agit d'un admin on créer une div qui au clic va supprimer le user ciblé
                     var newDiv = document.createElement("div");
                         document.getElementById('test').appendChild(newDiv);
                         newDiv.className = 'supAccount';
@@ -170,6 +164,7 @@ export default {
                 this.idAccount = objt.id;
                 console.log(objt)
                 for (let i of this.user) {
+                    //On boucle sur les user
                     console.log(i);
                     this.nameUser = i.name;
                     this.lastNameUser = i.lastName;
@@ -178,6 +173,7 @@ export default {
                     console.log(i.lastName)
                     console.log(i.id);
                     if(objt.id === i.accountId) {
+                        //Si l'user a un account
                         document.getElementById('user').innerHTML+= `
                             <div>
                                 <img class="picture" src="${this.pictureAccount}" />

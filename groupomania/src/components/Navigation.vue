@@ -6,7 +6,6 @@ export default {
 </script>
 <template>
   <div id="informationsUser">
-    <!--list acceder aux différentes parties du site-->
     <ul>
       <li>
         <div class="people">
@@ -39,16 +38,6 @@ export default {
         </div>
       </li>
     </ul>
-    <!-- fin list-->
-    <!--divider-->
-    <span class="divider"></span>
-    <!--list acceder aux reglages et aide du site-->
-    <ul>
-      <li>Settings</li>
-      <li>Help</li>
-    </ul>
-    <!-- fin list-->
-    <span class="divider"></span>
   </div>
 </template>
 <style lang="scss">

@@ -180,17 +180,28 @@ export default {
                     document.getElementById('info').style.position="fixed";
                     document.getElementById('info').style.zIndex="2";
                     document.getElementById('info').style.bottom="30%";
-                    document.getElementById('info').style.width="35%";
                     document.getElementById('info').style.border = "1px solid blueviolet";
                     document.getElementById('info').style.backgroundColor = "antiquewhite";
                     document.getElementById('info').style.display = "flex";
                     document.getElementById('info').style.flexDirection = "column-reverse";
-                    document.getElementById('info').style.margin = "0 15%";
-                    document.getElementById('info').innerHTML+=`
-                    <p>${item.message}</p>
-                    <img src="${item.media}" />
-                    <p>${item.date}</p>
-                    `
+                    if(item.media === null && item.message){
+                        document.getElementById('info').innerHTML+=`
+                        <p>${item.message}</p>
+                        <p>${item.date}</p>
+                        `
+                    }else if(!item.message){
+                        document.getElementById('info').innerHTML+=`
+                            <img src="${item.media}" />
+                            <p>${item.date}</p>
+                        `
+                    }
+                     else {
+                        document.getElementById('info').innerHTML+=`
+                        <p>${item.message}</p>
+                        <img src="${item.media}" />
+                        <p>${item.date}</p>
+                        `
+                    }
                     this.result = item.id;
                     return this.result;
                 }
@@ -319,7 +330,6 @@ export default {
         },
         //Envoi de nouvelles données et envoi de l'id du commentaire
         modifyComment(com) {
-            console.log('hey');
             console.log(com);
             console.log(this.comResult);
             console.log(this.newComment);
@@ -791,17 +801,18 @@ export default {
             }
             #info {
                 display:none;
+                width: 60%;
             }
             #form {
                 display:none;
-                width:83%;
-                width: 35%;
+                width:60%;
                 margin: 0px 15%;
                 position:fixed;
                 top:70%; 
                 z-index:1;
                 textarea {
-                    width:100%;padding: inherit;
+                    width:100%;
+                    padding: inherit;
                 }
             }
             .posts {
@@ -880,12 +891,13 @@ export default {
             } 
             #info {
                 display:none;
+                width: 60%;
+                margin: 0 10%;
             }
             #form {
                 display:none;
-                width:83%;
-                width: 35%;
-                margin: 0px 15%;
+                width: 60%;
+                margin: 0px 10%;
                 position:fixed;
                 top:70%; 
                 z-index:1;

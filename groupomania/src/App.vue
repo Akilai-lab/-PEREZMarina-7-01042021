@@ -1,3 +1,53 @@
+<template>
+  <div id="app">
+    <header>
+    <router-link to="/"><img src="../assets/icon-left-font.png" alt="logo" title="GroupomaniaLogo" /></router-link>
+      <span v-if="auth == false">
+        <ul>
+          <li>
+            <router-link to="/">S'inscrire</router-link>
+          </li>
+          <li>
+            <router-link to="/Login">Se connecter</router-link>
+          </li>
+        </ul>
+        </span>
+        <span v-if="auth == true">
+        <ul>
+          <li v-on:click="deleteAccount">Se désinscrire</li>
+          <li v-on:click="deconnected">Se déconnecter</li>
+        </ul>
+      </span>
+    </header>
+    <div class="blocInfo">
+      <div id="informationsUser">
+        <ul class="params" v-if="auth == false" style="display: none;">
+        </ul>
+        <ul class="params" v-if="auth == true">
+          <li>
+            <div class="myAccount">
+              <img src="../assets/user-alt-solid.png" alt="icone" title="icone" />
+              <router-link to="/Account">Account</router-link>
+            </div>
+          </li>
+          <li>
+            <div class="msg">
+              <img src="../assets/comments-solid.png" alt="icone" title="icone" />
+              <router-link to="Forum">Forum</router-link>
+            </div>
+          </li>
+          <li>
+            <div class="groups">
+              <img src="../assets/user-friends-solid.png" alt="icone" title="icone" />
+              <router-link to="/Utilisateurs">Utilisateurs</router-link>
+            </div>
+          </li>
+        </ul>
+      </div>
+    <router-view/>
+  </div>
+</div>
+</template>
 <script>
 import axios from "axios"; 
 export default {
@@ -12,8 +62,8 @@ export default {
     };
   },
   methods: {
+    //Suppression User
     deleteAccount() {
-      /* */ 
       const monObjet = JSON.parse(localStorage.getItem('token'));
       let auth = 'bearer' + " " + monObjet.token;
       console.log(auth);
@@ -34,8 +84,8 @@ export default {
         console.log(error);
       });
     },
+    //Deconnection User
     deconnected(e) {
-      //la méthode ne se lance pas pourquoi?
       console.log('tentative déconnection')
       e.preventDefault();
       console.log(this.localStorage);
@@ -44,85 +94,28 @@ export default {
     },
     dothis(){
       this.loadForum = true;
-      /**/ 
         axios.get("http://localhost:3030/api/post")
-        //on crée une route get
         .then(response => {
           window.location.replace('Login#/Forum'); 
-          /** bouton envoi commentaire **/
           console.log(response)
-          /** bouton répondre à un post **/
         })
     }
   },
   created(){
     this.auth = false;
-    console.log(localStorage.getItem('token'))  
+    console.log(localStorage.getItem('token'))
+    //User non identifié - redirection /Login  
     if(localStorage.getItem('token')===null) {
       this.auth = false
-      //Redirection connexion
       this.$router.push('Login')
     }
+    //User identifié
     if(localStorage.getItem('token')!=null) {
       this.auth = true
     }
   } 
 }
 </script>
-<template>
-  <div id="app">
-    <header>
-    <router-link to="/"><img src="../assets/icon-left-font.png" alt="logo" title="GroupomaniaLogo" /></router-link>
-      <span v-if="auth == false">
-        <ul>
-          <li>
-            <router-link to="/">S'inscrire</router-link>
-          </li>
-          <li>
-            <router-link to="/Login">Se connecter</router-link>
-          </li>
-        </ul>
-        </span>
-        <!----><span v-if="auth == true">
-        <ul>
-          <li v-on:click="deleteAccount">Se désinscrire</li>
-          <!--Créer un fonction pour supprimer son compte, la route delete est déjà créée-->
-          <li v-on:click="deconnected">Se déconnecter</li>
-          <!--Créer une fonction pour se déconnecter-->
-        </ul>
-      </span>
-    </header>
-    <div class="blocInfo">
-      <div id="informationsUser">
-        <!--list acceder aux différentes parties du site-->
-        <ul class="params" v-if="auth == false" style="display: none;">
-        </ul>
-        <ul class="params" v-if="auth == true">
-          <li>
-            <div class="myAccount">
-              <img src="../assets/user-alt-solid.png" alt="icone" title="icone" />
-              <router-link to="/Account">Account</router-link>
-            </div>
-          </li>
-          <li>
-            <div class="msg">
-              <img src="../assets/comments-solid.png" alt="icone" title="icone" />
-              <router-link to="Forum">Forum</router-link>
-              <!-- <div v-on:click="dothis">Forum</div> -->
-            </div>
-          </li>
-          <li>
-            <div class="groups">
-              <img src="../assets/user-friends-solid.png" alt="icone" title="icone" />
-              <router-link to="/Utilisateurs">Utilisateurs</router-link>
-            </div>
-          </li>
-        </ul>
-      </div>
-    <router-view/>
-  </div>
-</div>
-</template>
 
 <style lang="scss">
 #app {

@@ -4,6 +4,7 @@ const User = require('../models/users');
 const Comment = require ('../models/commentaires');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const { post } = require('../routes/user');
 exports.posts = async (req , res, next) =>{
 
     const token = req.headers.authorization.split(' ')[1];
@@ -157,13 +158,15 @@ exports.deletePost = async (req, res, next) => {
                 .then(post => {
                     console.log(post)
                     console.log(post.media)
-                    const filename = post.media.split("/images/")[1];
-                    console.log(filename);
-                    fs.unlink(`images/${filename}`, function (err) {
-                        if (err) throw err;
-                            console.log('File deleted!');
-                            console.log(filename);
+                    if(post.media != null) {
+                        const filename = post.media.split("/images/")[1];
+                        console.log(filename);
+                        fs.unlink(`images/${filename}`, function (err) {
+                            if (err) throw err;
+                                console.log('File deleted!');
+                                console.log(filename);
                         });
+                    }
                 })
                 .then(()=> {
                     Posts.destroy({

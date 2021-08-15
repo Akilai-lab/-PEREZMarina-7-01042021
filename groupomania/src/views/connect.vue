@@ -23,10 +23,6 @@
 //import Connection from '@/components/Connection.vue'
 import axios from "axios"; 
 export default {
-  /*name: 'isconnect',
-  /*components: {
-    Connection
-  }*/
   data() {
       return {
         userId: null,
@@ -36,6 +32,7 @@ export default {
     },
   methods: {
      submit(e) {
+       //Formulaire de soumission de formulaire de connection avec regex
        e.preventDefault();
       const params = new URLSearchParams();
       var regPassword = /^(?=.*[A-Za-z])|[^0-9]*|[[A-Za-z\d]{8,}$/;
@@ -43,17 +40,14 @@ export default {
         params.append('password', this.password);
       }
       else {
-        //ajouter text d'erreur
         console.log('error password')
         document.getElementById('password').style.border="1.5px solid red";
       }
-            //regex email
       var regEmail = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+/;
       if (regEmail.test(this.email) && this.email != "") {
         params.append('email', this.email);
       }
       else {
-        //ajouter text d'erreur
         console.log('error email')
         document.getElementById('email').style.border="1.5px solid red";
       }

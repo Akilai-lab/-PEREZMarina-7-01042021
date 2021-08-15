@@ -1,329 +1,3 @@
-<script>
-import axios from "axios"; 
-import FormData from 'form-data';
-export default {
-	name: 'Forum',
-    data() {
-      return {
-        donneesText : {
-            img: ""
-        },
-        message : "",
-        info : [],
-        comment : "",
-        newComment: "",
-        repeat: false,
-        test: null,
-        result: null,
-        newResult:null,
-        comResult: null,
-        commentsShow: null,
-        postIdShow: false,
-        modifPost : false,
-        modifCom : false,
-        newMessage : null,
-        userId : null,
-        status : null,
-        idUser : null,
-        userNameUser: "",
-        arrayPost: [],
-        arrayPostDetails: [],
-        isModifyPost : false,
-        isModifyComment : false 
-
-      };
-    },
-    methods: {
-        addPost() {
-            var formData = new FormData();
-            let img = document.getElementById('picture').files[0];
-            if(img && this.message != "") {
-                formData.append('picture', img);
-                formData.append('message', this.message);
-            }
-            else if(img) {
-                formData.append('picture', img);
-            }
-            else if(this.message != "") {
-                formData.append('message', this.message);
-            }
-            
-            console.log(...formData);
-            console.log(img);
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.post("http://localhost:3030/api/post", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': auth
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-                console.log(auth);
-            })
-            .then(()=> {
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                this.output = error;
-            });
-        },
-        addComment(item) {
-            document.getElementById('info').style.display="block";
-            document.getElementById('form').style.display="block";
-            for(let i of this.test) {
-                if(item.id===i.id){   
-                    document.getElementById('info').style.position="fixed";
-                    document.getElementById('info').style.zIndex="2";
-                    document.getElementById('info').style.bottom="30%";
-                    document.getElementById('info').style.width="35%";
-                    document.getElementById('info').style.border = "1px solid blueviolet";
-                    document.getElementById('info').style.backgroundColor = "antiquewhite";
-                    document.getElementById('info').style.display = "flex";
-                    document.getElementById('info').style.flexDirection = "column-reverse";
-                    document.getElementById('info').style.margin = "0 15%";
-                    document.getElementById('info').innerHTML+=`
-                    <h2>${item.id}</h2>
-                    <p>${item.message}</p>
-                    <img src="${item.media}" />
-                    <p>${item.date}</p>
-                    `
-                    this.result = item.id;
-                    return this.result;
-                }
-            }
-        },
-        publish() {
-            console.log('hey');
-            console.log(this.comment)
-            var formData = new FormData();
-            formData.append('postId', this.result);
-            formData.append('message', this.comment);
-            console.log(...formData);
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.post("http://localhost:3030/api/comment/", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': auth
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-                console.log(response.data);
-                console.log(auth);
-            })
-            .then(()=> {
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                this.output = error;
-            });
-        },
-        modifPostActu(item) { 
-            console.log(item);
-            console.log(this.test);
-            this.isModifyPost = true;
-            this.isModifyComment = true;
-            document.getElementById('hidden').style.display = "flex";
-            document.getElementById('hidden').style.flexDirection = "column";
-            document.getElementById('hidden').style.alignItems = "center";
-            for(let i of this.test) {
-                if(item===i.id){           
-                    this.newResult = item;
-                    console.log(this.newResult)
-                    return this.newResult;
-                }
-            }
-        },
-        modifyPost() {
-            console.log(this.newResult);
-            var formData = new FormData();
-            formData.append('postId', this.newResult);
-            let nextImg = document.getElementById('newPicture').files[0];
-            if(nextImg != undefined) {
-                formData.append('picture', nextImg);
-            }
-            if(this.newMessage != null) {
-                formData.append('message', this.newMessage);
-            }
-            console.log(...formData);
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.put("http://localhost:3030/api/post", formData, {
-                headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': auth
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-                console.log('response');
-                console.log(auth);
-            })
-            .then(()=> {
-                document.getElementById('hidden').style.display = "none";
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                this.output = error;
-            });
-        },
-        deletePost(item) {
-            console.log(item);
-            let idpost = item;
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.delete("http://localhost:3030/api/post/deletePost", {
-                data: {idpost},
-                headers: {
-                    'Authorization': auth
-                }
-            }) 
-            .then(function (response) {
-                console.log(response);
-                alert('votre commentaire a été supprimé');
-                console.log("le commentaire est supprimé")
-            })
-            .then(()=> {
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        },
-        modifComActu(com){
-            console.log(com);
-            this.isModifyComment = true;
-            this.isModifyPost = true;
-            document.getElementById('infoHiddenCom').style.display="flex";     
-            for(let i of this.commentsShow) {
-                if(com===i.id){   
-                    console.log(com)
-                    console.log(i.id)
-                    this.comResult = com;
-                    console.log(this.comResult);
-                    return this.comResult;
-                }
-            }
-        },
-        modifyComment(com) {
-            console.log('hey');
-            console.log(com);
-            console.log(this.comResult);
-            console.log(this.newComment);
-            var formData = new FormData();
-            formData.append('message', this.newComment);
-            formData.append('id', this.comResult)
-            console.log(...formData);
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.put("http://localhost:3030/api/comment", formData, {
-                headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': auth
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-                console.log(auth);
-            })
-            .then(()=> {
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                this.output = error;
-            });
-        },
-        deleteComment(com) {
-            let idcom = com;
-            console.log(com);
-            const monObjet = JSON.parse(localStorage.getItem('token'));
-            let auth = 'bearer' + " " + monObjet.token;
-            console.log(auth);
-            axios.delete("http://localhost:3030/api/comment/deleteComment", {
-                data: {idcom},
-                headers: {
-                    'Authorization': auth
-                }
-            }) 
-            .then(function (response) {
-                console.log(response);
-                console.log("le commentaire est supprimé")
-            })
-            .then(()=> {
-                window.location.replace('/Forum');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
-    },
-    created(){
-        const monObjet = JSON.parse(localStorage.getItem('token'));
-        let auth = 'bearer' + " " + monObjet.token;
-        axios.get("http://localhost:3030/api/user",{
-        headers: {
-          'Authorization': auth
-        }
-        })
-        .then(response => {
-            console.log(response.data)
-            this.status = response.data.status;
-            console.log(this.status);
-            this.userId = response.data.id;
-            console.log(this.userId);
-            this.userName = response.data.userName;
-            localStorage.setItem('userId',this.userId);
-            return this.userId;
-        })
-        .catch(function (error) {
-          this.output = error;
-        });
-        axios.get("http://localhost:3030/api/post")
-        .then(response => {
-            console.log(response);
-            this.test = response.data;
-            console.log(this.test);
-        })
-        .then(()=> {
-            axios.get("http://localhost:3030/api/user/all")
-            .then(response => {
-                console.log(response.data)
-                for(let i of response.data) {
-                    this.arrayPost = {
-                        id : i.id,
-                        userName : i.userName
-                    }
-                    this.arrayPostDetails.push(this.arrayPost)
-                }
-                console.log(this.arrayPostDetails);
-            })
-            .catch(function (error) {
-            this.output = error;
-            });
-        })
-        .catch(function (error) {
-            this.output = error;
-        });
-        axios.get("http://localhost:3030/api/comment")
-        .then(response => {
-            this.commentsShow = response.data;
-            this.postIdShow = true;
-        })
-        .catch(function (error) {
-            this.output = error;
-        });
-    }
-}
-</script>
 <template>
     <div id="blocCentral">
         <div class="blocPost">
@@ -423,6 +97,343 @@ export default {
         </div>
     </div>
 </template>
+<script>
+import axios from "axios"; 
+import FormData from 'form-data';
+export default {
+	name: 'Forum',
+    data() {
+      return {
+        donneesText : {
+            img: ""
+        },
+        message : "",
+        info : [],
+        comment : "",
+        newComment: "",
+        repeat: false,
+        test: null,
+        result: null,
+        newResult:null,
+        comResult: null,
+        commentsShow: null,
+        postIdShow: false,
+        modifPost : false,
+        modifCom : false,
+        newMessage : null,
+        userId : null,
+        status : null,
+        idUser : null,
+        userNameUser: "",
+        arrayPost: [],
+        arrayPostDetails: [],
+        isModifyPost : false,
+        isModifyComment : false 
+
+      };
+    },
+    methods: {
+        //Formulaire de post(s)
+        addPost() {
+            var formData = new FormData();
+            let img = document.getElementById('picture').files[0];
+            if(img && this.message != "") {
+                formData.append('picture', img);
+                formData.append('message', this.message);
+            }
+            else if(img) {
+                formData.append('picture', img);
+            }
+            else if(this.message != "") {
+                formData.append('message', this.message);
+            }
+            
+            console.log(...formData);
+            console.log(img);
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.post("http://localhost:3030/api/post", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': auth
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                console.log(auth);
+            })
+            .then(()=> {
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                this.output = error;
+            });
+        },
+        //Affichage de Formulaire de commentaire(s)
+        addComment(item) {
+            document.getElementById('info').style.display="block";
+            document.getElementById('form').style.display="block";
+            for(let i of this.test) {
+                if(item.id===i.id){   
+                    document.getElementById('info').style.position="fixed";
+                    document.getElementById('info').style.zIndex="2";
+                    document.getElementById('info').style.bottom="30%";
+                    document.getElementById('info').style.width="35%";
+                    document.getElementById('info').style.border = "1px solid blueviolet";
+                    document.getElementById('info').style.backgroundColor = "antiquewhite";
+                    document.getElementById('info').style.display = "flex";
+                    document.getElementById('info').style.flexDirection = "column-reverse";
+                    document.getElementById('info').style.margin = "0 15%";
+                    document.getElementById('info').innerHTML+=`
+                    <p>${item.message}</p>
+                    <img src="${item.media}" />
+                    <p>${item.date}</p>
+                    `
+                    this.result = item.id;
+                    return this.result;
+                }
+            }
+        },
+        //Formulaire de commentaire(s)
+        publish() {
+            console.log(this.comment)
+            var formData = new FormData();
+            formData.append('postId', this.result);
+            formData.append('message', this.comment);
+            console.log(...formData);
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.post("http://localhost:3030/api/comment/", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': auth
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                console.log(response.data);
+                console.log(auth);
+            })
+            .then(()=> {
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                this.output = error;
+            });
+        },
+        //Récupération de l'id du post
+        modifPostActu(item) { 
+            console.log(item);
+            console.log(this.test);
+            this.isModifyPost = true;
+            this.isModifyComment = true;
+            document.getElementById('hidden').style.display = "flex";
+            document.getElementById('hidden').style.flexDirection = "column";
+            document.getElementById('hidden').style.alignItems = "center";
+            for(let i of this.test) {
+                if(item===i.id){           
+                    this.newResult = item;
+                    console.log(this.newResult)
+                    return this.newResult;
+                }
+            }
+        },
+        //Envoi de nouvelles données de post avec l'id du post
+        modifyPost() {
+            console.log(this.newResult);
+            var formData = new FormData();
+            formData.append('postId', this.newResult);
+            let nextImg = document.getElementById('newPicture').files[0];
+            if(nextImg != undefined) {
+                formData.append('picture', nextImg);
+            }
+            if(this.newMessage != null) {
+                formData.append('message', this.newMessage);
+            }
+            console.log(...formData);
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.put("http://localhost:3030/api/post", formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': auth
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                console.log('response');
+                console.log(auth);
+            })
+            .then(()=> {
+                document.getElementById('hidden').style.display = "none";
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                this.output = error;
+            });
+        },
+        //Envoi de l'id du post pour sa suppression
+        deletePost(item) {
+            console.log(item);
+            let idpost = item;
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.delete("http://localhost:3030/api/post/deletePost", {
+                data: {idpost},
+                headers: {
+                    'Authorization': auth
+                }
+            }) 
+            .then(function (response) {
+                console.log(response);
+                alert('votre commentaire a été supprimé');
+                console.log("le commentaire est supprimé")
+            })
+            .then(()=> {
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        //Récupération de l'id du commentaire
+        modifComActu(com){
+            console.log(com);
+            this.isModifyComment = true;
+            this.isModifyPost = true;
+            document.getElementById('infoHiddenCom').style.display="flex";     
+            for(let i of this.commentsShow) {
+                if(com===i.id){   
+                    console.log(com)
+                    console.log(i.id)
+                    this.comResult = com;
+                    console.log(this.comResult);
+                    return this.comResult;
+                }
+            }
+        },
+        //Envoi de nouvelles données et envoi de l'id du commentaire
+        modifyComment(com) {
+            console.log('hey');
+            console.log(com);
+            console.log(this.comResult);
+            console.log(this.newComment);
+            var formData = new FormData();
+            formData.append('message', this.newComment);
+            formData.append('id', this.comResult)
+            console.log(...formData);
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.put("http://localhost:3030/api/comment", formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': auth
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+                console.log(auth);
+            })
+            .then(()=> {
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                this.output = error;
+            });
+        },
+        //Envoi de l'id du commentaire pour sa suppression
+        deleteComment(com) {
+            let idcom = com;
+            console.log(com);
+            const monObjet = JSON.parse(localStorage.getItem('token'));
+            let auth = 'bearer' + " " + monObjet.token;
+            console.log(auth);
+            axios.delete("http://localhost:3030/api/comment/deleteComment", {
+                data: {idcom},
+                headers: {
+                    'Authorization': auth
+                }
+            }) 
+            .then(function (response) {
+                console.log(response);
+                console.log("le commentaire est supprimé")
+            })
+            .then(()=> {
+                window.location.replace('/Forum');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    created(){
+        //On récupère toutes les données de l'user connecté
+        const monObjet = JSON.parse(localStorage.getItem('token'));
+        let auth = 'bearer' + " " + monObjet.token;
+        axios.get("http://localhost:3030/api/user",{
+        headers: {
+          'Authorization': auth
+        }
+        })
+        .then(response => {
+            console.log(response.data)
+            this.status = response.data.status;
+            console.log(this.status);
+            this.userId = response.data.id;
+            console.log(this.userId);
+            this.userName = response.data.userName;
+            localStorage.setItem('userId',this.userId);
+            return this.userId;
+        })
+        .catch(function (error) {
+          this.output = error;
+        });
+        axios.get("http://localhost:3030/api/post")
+        //On récupère tous les posts
+        .then(response => {
+            console.log(response);
+            this.test = response.data;
+            console.log(this.test);
+        })
+        .then(()=> {
+            axios.get("http://localhost:3030/api/user/all")
+            //on récupère tes les users
+            .then(response => {
+                console.log(response.data)
+                for(let i of response.data) {
+                    this.arrayPost = {
+                        id : i.id,
+                        userName : i.userName
+                    }
+                    this.arrayPostDetails.push(this.arrayPost)
+                }
+                console.log(this.arrayPostDetails);
+            })
+            .catch(function (error) {
+            this.output = error;
+            });
+        })
+        .catch(function (error) {
+            this.output = error;
+        });
+        axios.get("http://localhost:3030/api/comment")
+        //On récupère tous les commentaires
+        .then(response => {
+            this.commentsShow = response.data;
+            this.postIdShow = true;
+        })
+        .catch(function (error) {
+            this.output = error;
+        });
+    }
+}
+</script>
 
 <style lang="scss">
 .forum {

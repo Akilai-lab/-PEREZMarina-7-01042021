@@ -7,10 +7,7 @@
       <div id="details">
         <form id="form" enctype='multipart/form-data' style="display: flex;align-items: center;flex-direction: column;">
           <label style="margin-bottom: 40px;">Ajouter une photo de profil</label>
-          <!-- Si l'emplacement comporte une image, on n'affiche pas l'input -->
           <input id="picture" accept="image/*" type="file">
-          <!-- Condition qui dit que si status est celui d'un admin -->
-          <!-- Alors input id picture n'apparait pas -->
           <button @click="newPicture">Ajouter photo</button>
           <button @click="newPict" class="button">Changer de photo</button>
         </form>
@@ -72,17 +69,15 @@ export default {
     };
   },
   created(){
-        console.log('user')
-        //si userAuth est true alors on affiche les informations relatives à l'user connecté
         const monObjet = JSON.parse(localStorage.getItem('token'));
         let auth = 'bearer' + " " + monObjet.token;
+        //on récupère toutes les données de l'user
         axios.get("http://localhost:3030/api/user",{
         headers: {
           'Authorization': auth
         }
         })
         .then(response => {
-          console.log(response.data);
           this.name = response.data.name;
           this.lastName = response.data.lastName;
           this.userName = response.data.userName;
@@ -90,41 +85,41 @@ export default {
           this.id = response.data.id
         })
         .then(()=>{
+          //on récupère toutes les posts
           axios.get("http://localhost:3030/api/post")
           .then(response => {
               console.log(response);
               this.test = response.data;
               console.log(this.test);
               for(let object = 0; object < this.test.length; object++) {
-                //on boucle sur les éléments du tableau
                 console.log(this.test[object].userId);
+                //Si l'userId d'un post est identique à l'userId 
                 if(this.test[object].userId === this.id){
-                  //si le userId de chaque object est égal à l'id de l'user
                   console.log(this.test[object]);
+                  //on incrémente +1 à la variable qui correspond au nb de posts
                   this.nbPost += 1
                 }
                 else {
                   this.nbPost = 0
                 }
-                //return this.nbPost
               }
               console.log(this.nbPost)
           })
+          //On récupère tous les commentaires
           axios.get("http://localhost:3030/api/comment")
           .then(response => {
               this.commentsShow = response.data;
               for(let object = 0; object < this.commentsShow.length; object++) {
-                //on boucle sur les éléments du tableau
                 console.log(this.commentsShow[object].userId);
+                //Si l'userId d'un post est identique à l'userId
                 if(this.commentsShow[object].userId === this.id){
-                  //si le userId de chaque object est égal à l'id de l'user
                   console.log(this.commentsShow[object]);
+                  //on incrémente +1 à la variable qui correspond au nb de commentaires
                   this.nbCom += 1
                 }
                 else {
                   this.nbCom = 0;
                 }
-                //return this.nbPost
               }
               console.log(this.nbCom)
           })
@@ -135,6 +130,7 @@ export default {
         .catch(function (error) {
           this.output = error;
         });
+        //on récupère les données de l'account qui a comme userId l'id de l'user
         axios.get("http://localhost:3030/api/account",{
         headers: {
           'Authorization': auth
@@ -151,10 +147,10 @@ export default {
         });
   },
   methods : {
+    //Formulaire pour ajouter l'image de profil
     newPicture() {
       var formData = new FormData();
       let img = document.getElementById('picture').files[0];
-      // methode fonctionne le seul problème est l'affichage des images
       formData.set('picture', img);
       console.log(...formData);
       console.log(img);
@@ -175,10 +171,10 @@ export default {
         this.output = error;
       });
     },
+    //Formulaire pour changer l'image de profil
     newPict() {
       var formData = new FormData();
       let img = document.getElementById('picture').files[0];
-      // methode fonctionne le seul problème est l'affichage des images
       formData.set('picture', img);
       console.log(...formData);
       console.log(img);
@@ -199,9 +195,11 @@ export default {
         this.output = error;
       });
     },
+    //Apparition de Formulaire pour changer la description
     editeProfil() {
       this.edited = true;
     },
+    //Formulaire pour changer la description
     newDescript() {
       var formData = new FormData();
       if(this.descript != null) {
@@ -221,7 +219,6 @@ export default {
       .then(function (response) {
         console.log(response);
         console.log(auth);
-        //faire une redirection
         window.location.replace('/Account');
       })
       .catch(function (error) {

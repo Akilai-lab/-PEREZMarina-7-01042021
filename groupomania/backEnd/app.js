@@ -11,7 +11,7 @@ const user = require('./routes/user');
 const posts = require('./routes/post');
 const comments = require('./routes/comment');
 const account = require('./routes/account');
-
+//dotevent
 app.use(helmet());
 app.use(
   mongoSanitize({

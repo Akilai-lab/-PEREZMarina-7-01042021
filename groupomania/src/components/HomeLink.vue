@@ -1,110 +1,3 @@
-<script>
-import axios from "axios"; 
-export default {
-  name: 'HomeLink', 
-  data() {
-    return {
-      name : "",
-      userName : "",
-      lastName : "",
-      email : "",
-      password : "",
-      donnees : {
-        checkedNames : [],
-        adminChoice: "" //donne true au lieu de Admin
-      }
-    };
-  },
-  methods: {
-    submit(e) {
-      e.preventDefault();
-      const params = new URLSearchParams();
-      //regex name et lastname 
-      var regLetters = /^[a-zA-Z '.-]*$/
-        ///^[a-zA-Z '.-]*$/
-      if (regLetters.test(this.name) && this.name != "") {
-        params.append('name', this.name);
-      }
-      else {
-        //ajouter text d'erreur
-        console.log('error name')
-        document.getElementById('name').style.border="1.5px solid red";
-      }
-      if (regLetters.test(this.userName) && this.userName != "") {
-        params.append('userName', this.userName);
-      }
-      else {
-        //ajouter text d'erreur
-        console.log('error userName')
-        document.getElementById('userName').style.border="1.5px solid red";
-      }
-      if (regLetters.test(this.lastName) && this.lastName != "") {
-        params.append('lastName', this.lastName);
-      }
-      else {
-        //ajouter text d'erreur
-        console.log('error lastName')
-        document.getElementById('lastName').style.border="1.5px solid red";
-      }
-      //regex mot de passe
-      var regPassword = /^(?=.*[A-Za-z])|[^0-9]*|[[A-Za-z\d]{8,}$/;
-      if (regPassword.test(this.password) && this.password != "") {
-        params.append('password', this.password);
-      }
-      else {
-        //ajouter text d'erreur
-        console.log('error password')
-        document.getElementById('password').style.border="1.5px solid red";
-      }
-            //regex email
-      var regEmail = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+/;
-      if (regEmail.test(this.email)  && this.email != "") {
-        params.append('email', this.email);
-      }
-      else {
-        //ajouter text d'erreur
-        console.log('error email')
-        document.getElementById('email').style.border="1.5px solid red";
-      }
-      //exemple utilisation regex
-        //var re = new RegExp("^[a-zA-Z0-9]+$", "g");
-          //if(!re.test(str)) return false;   
-
-        //var er = /([\w-\.]+@[\w\.]+\.{1}[\w]+)/;
-          //if (er.test(email)) document.write("valide");   
-      /*params.append('name', this.name);
-      params.append('userName', this.userName);
-      params.append('lastName', this.lastName);
-      params.append('email', this.email);
-      params.append('password', this.password);*/
-      //params.append('status', this.checkedNames)
-      console.log(params);
-      if(
-        (regEmail.test(this.email) && this.email.value != "")
-        && (regPassword.test(this.password) && this.password.value != "")
-        && (regLetters.test(this.name) && this.name.value != "")
-        && (regLetters.test(this.userName) && this.userName.value!="")
-        && (regLetters.test(this.lastName) && this.lastName.value!="")
-        ) {
-        axios.post("http://localhost:3030/api/user/signup", params)
-        .then(function (response) {
-          console.log(response.data);
-          console.log(response.status);
-          console.log(response.statusText);
-          console.log(response.headers);
-          console.log(response.config);
-        })
-        .then(()=>{
-          window.location.replace('/Forum');
-        })
-        .catch(function (error) {
-          this.output = error;
-        });
-      }
-    }
-  }
-}
-</script>
 <template>
   <div class="mobile">
     <div id="banniere">
@@ -160,6 +53,93 @@ export default {
     </form>
   </div>
 </template>
+<script>
+import axios from "axios"; 
+export default {
+  name: 'HomeLink', 
+  data() {
+    return {
+      name : "",
+      userName : "",
+      lastName : "",
+      email : "",
+      password : "",
+      donnees : {
+        checkedNames : [],
+        adminChoice: "" 
+      }
+    };
+  },
+  methods: {
+    submit(e) {
+      //Formulaire de soumission de formulaire d'inscription avec regex
+      e.preventDefault();
+      const params = new URLSearchParams();
+      var regLetters = /^[a-zA-Z '.-]*$/
+      if (regLetters.test(this.name) && this.name != "") {
+        params.append('name', this.name);
+      }
+      else {
+        console.log('error name')
+        document.getElementById('name').style.border="1.5px solid red";
+      }
+      if (regLetters.test(this.userName) && this.userName != "") {
+        params.append('userName', this.userName);
+      }
+      else {
+        console.log('error userName')
+        document.getElementById('userName').style.border="1.5px solid red";
+      }
+      if (regLetters.test(this.lastName) && this.lastName != "") {
+        params.append('lastName', this.lastName);
+      }
+      else {
+        console.log('error lastName')
+        document.getElementById('lastName').style.border="1.5px solid red";
+      }
+      var regPassword = /^(?=.*[A-Za-z])|[^0-9]*|[[A-Za-z\d]{8,}$/;
+      if (regPassword.test(this.password) && this.password != "") {
+        params.append('password', this.password);
+      }
+      else {
+        console.log('error password')
+        document.getElementById('password').style.border="1.5px solid red";
+      }
+      var regEmail = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+/;
+      if (regEmail.test(this.email)  && this.email != "") {
+        params.append('email', this.email);
+      }
+      else {
+        console.log('error email')
+        document.getElementById('email').style.border="1.5px solid red";
+      }
+      console.log(params);
+      if(
+        (regEmail.test(this.email) && this.email.value != "")
+        && (regPassword.test(this.password) && this.password.value != "")
+        && (regLetters.test(this.name) && this.name.value != "")
+        && (regLetters.test(this.userName) && this.userName.value!="")
+        && (regLetters.test(this.lastName) && this.lastName.value!="")
+        ) {
+        axios.post("http://localhost:3030/api/user/signup", params)
+        .then(function (response) {
+          console.log(response.data);
+          console.log(response.status);
+          console.log(response.statusText);
+          console.log(response.headers);
+          console.log(response.config);
+        })
+        .then(()=>{
+          window.location.replace('/Forum');
+        })
+        .catch(function (error) {
+          this.output = error;
+        });
+      }
+    }
+  }
+}
+</script>
 
 <style lang="scss"> 
 .mobile {

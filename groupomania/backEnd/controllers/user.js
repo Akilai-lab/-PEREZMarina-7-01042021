@@ -66,7 +66,6 @@ exports.login = async (req, res, next) => {
                     { expiresIn: '24h' }
                   )
               });
-              console.log('hy');
               console.log(idUser)
                 //Erreur: le paramètre WHERE "mail" a une valeur "non définie" non valide
                 //userId = user.id;

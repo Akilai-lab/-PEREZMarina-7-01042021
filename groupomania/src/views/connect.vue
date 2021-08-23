@@ -1,8 +1,8 @@
 <template>
   <div class="mobile">
     <div id="banniere">
-    <h1>Connectez-vous</h1>
-    <div class="triangle"></div>
+      <h1>Connectez-vous</h1>
+      <div class="triangle"></div>
     </div>
     <form>
       <div class="mail">

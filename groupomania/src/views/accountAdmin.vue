@@ -4,7 +4,7 @@
       <div class="picture" v-if="accountId==actualUserId">
         <img :src = "picture" /> 
       </div>
-        <div class="picture" v-if="accountId!=actualUserId">
+      <div class="picture" v-if="accountId!=actualUserId">
       </div>
       <div id="detailsProfil">
         <p>{{this.name}}</p>
@@ -31,6 +31,7 @@
     </div>
   </div>
 </template>
+
 <script>
 // @ is an alias to /src
 //import AccountAdmin from '@/components/AccountAdmin.vue'

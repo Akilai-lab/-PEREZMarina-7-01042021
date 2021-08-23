@@ -1,5 +1,5 @@
 <template>
-<div class="allSections">
+  <div class="allSections">
     <div class="user">
       <div class="picture">
         <img :src = "picture" v-if="picture != null" /> 
@@ -9,7 +9,7 @@
           <label style="margin-bottom: 40px;">Ajouter une photo de profil</label>
           <input id="picture" accept="image/*" type="file">
           <button @click="newPicture">Ajouter photo</button>
-          <button @click="newPict" class="button">Changer de photo</button>
+          <!--<button @click="newPict" class="button">Changer de photo</button>-->
         </form>
       </div>
       <div id="detailsUser">

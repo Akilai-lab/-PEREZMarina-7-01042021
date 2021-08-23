@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-    <router-link to="/"><img src="../assets/icon-left-font.png" alt="logo" title="GroupomaniaLogo" /></router-link>
+      <router-link to="/"><img src="../assets/icon-left-font.png" alt="logo" title="GroupomaniaLogo" /></router-link>
       <span v-if="auth == false">
         <ul>
           <li>
@@ -11,8 +11,8 @@
             <router-link to="/Login">Se connecter</router-link>
           </li>
         </ul>
-        </span>
-        <span v-if="auth == true">
+      </span>
+      <span v-if="auth == true">
         <ul>
           <li v-on:click="deleteAccount">Se désinscrire</li>
           <li v-on:click="deconnected">Se déconnecter</li>
@@ -44,9 +44,9 @@
           </li>
         </ul>
       </div>
-    <router-view/>
+      <router-view/>
+    </div>
   </div>
-</div>
 </template>
 <script>
 import axios from "axios"; 

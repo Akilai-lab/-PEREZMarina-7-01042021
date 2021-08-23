@@ -132,9 +132,7 @@ export default {
                     var newDiv = document.createElement("div");
                         document.getElementById('test').appendChild(newDiv);
                         newDiv.className = 'supAccount';
-                        console.log('pre-delete');
                         newDiv.addEventListener("click", function() {
-                            console.log('delete');
                             let iduser = i.id;
                             const monObjet = JSON.parse(localStorage.getItem('token'));
                             let auth = 'bearer' + " " + monObjet.token;
